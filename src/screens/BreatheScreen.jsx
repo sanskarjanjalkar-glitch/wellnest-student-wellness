@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { BREATHS } from '../ai.js';
 
-// 4. BREATHE
 function BreatheScreen() {
   const [active, setActive] = useState(false);
   const [phaseIndex, setPhaseIndex] = useState(0);
@@ -16,10 +15,10 @@ function BreatheScreen() {
   const currentPhase = phaseOrder[phaseIndex] || "inhale";
 
   function getPhaseLabel(p) {
-    if (p === "inhale") return "Breathe In";
-    if (p === "hold1") return "Hold";
-    if (p === "exhale") return "Breathe Out";
-    if (p === "hold2") return "Hold";
+    if (p === "inhale") return "Breathe In Slowly";
+    if (p === "hold1") return "Hold Gently";
+    if (p === "exhale") return "Exhale Slowly";
+    if (p === "hold2") return "Rest";
     return "";
   }
 
@@ -55,52 +54,78 @@ function BreatheScreen() {
       : 1.35;
 
   return (
-    <div style={{ padding: "28px 20px 100px", maxWidth: 500, margin: "0 auto" }}>
-      <h2 style={{ color: "#fff", fontWeight: 800, fontSize: 26, marginBottom: 6 }}>Breathwork 🫧</h2>
-      <p style={{ color: "#64748b", marginBottom: 20 }}>Choose a technique and breathe with the calming circle</p>
-      <div style={{ display: "flex", gap: 10, marginBottom: 28, overflowX: "auto", paddingBottom: 4 }}>
+    <div style={{ padding: "24px 18px 90px", maxWidth: 480, margin: "0 auto", textAlign: "center" }}>
+      <h2 style={{ color: "#f8fafc", fontWeight: 800, fontSize: 24, marginBottom: 4 }}>Guided Breathing 🫧</h2>
+      <p style={{ color: "#94a3b8", fontSize: 13, marginBottom: 20 }}>2 minutes to lower your heart rate before an exam or sleep</p>
+
+      {/* Pattern Selector */}
+      <div style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 26 }}>
         {BREATHS.map(b => (
-          <button key={b.name} onClick={() => { setSelected(b); setActive(false); setPhaseIndex(0); setCount(0); setCycle(0); }}
+          <button key={b.name} onClick={() => { setSelected(b); setActive(false); setPhaseIndex(0); setCount(0); }}
             style={{
-              padding: "10px 16px", borderRadius: 50, border: `1.5px solid ${selected.name === b.name ? "#7c3aed" : "#ffffff18"}`,
-              background: selected.name === b.name ? "#7c3aed22" : "#ffffff06",
-              color: selected.name === b.name ? "#a78bfa" : "#64748b", fontSize: 13, fontWeight: 700,
-              cursor: "pointer", whiteSpace: "nowrap", transition: "all 0.2s"
+              flex: 1, padding: "10px 8px", borderRadius: 12,
+              background: selected.name === b.name ? "#2563eb" : "#1e293b",
+              border: selected.name === b.name ? "1px solid #3b82f6" : "1px solid #334155",
+              color: selected.name === b.name ? "#fff" : "#94a3b8",
+              cursor: "pointer", fontSize: 12, fontWeight: 600
             }}>
             {b.name}
           </button>
         ))}
       </div>
-      <div style={{ textAlign: "center", marginBottom: 28 }}>
-        <div style={{ position: "relative", width: 200, height: 200, margin: "0 auto 24px" }}>
-          {[1.6, 1.4, 1.2].map((r, i) => (
-            <div key={i} style={{
-              position: "absolute", inset: 0, borderRadius: "50%",
-              background: `radial-gradient(circle, #7c3aed${["08", "0c", "12"][i]}, transparent 70%)`,
-              transform: `scale(${active ? scale * r : r})`, transition: "transform 0.8s ease-in-out"
-            }} />
-          ))}
-          <div style={{
-            position: "absolute", inset: 0, borderRadius: "50%",
-            background: "linear-gradient(135deg,#7c3aed,#0ea5e9)",
-            transform: `scale(${active ? scale : 1})`, transition: "transform 0.8s ease-in-out",
-            display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column"
-          }}>
-            <div style={{ color: "#fff", fontWeight: 800, fontSize: 18 }}>{getPhaseLabel(currentPhase)}</div>
-            <div style={{ color: "#e2e8f0", fontSize: 32, fontWeight: 900 }}>{active ? phaseDur - count : "—"}</div>
-          </div>
-        </div>
-        <div style={{ color: "#94a3b8", fontSize: 13, marginBottom: 6 }}>{selected.desc}</div>
-        {cycle > 0 && <div style={{ color: "#4ade80", fontWeight: 700, fontSize: 14 }}>✓ Cycle {cycle} complete</div>}
+
+      <div style={{ fontSize: 12, color: "#cbd5e1", marginBottom: 28, background: "#1e293b", padding: "8px 12px", borderRadius: 10, display: "inline-block" }}>
+        💡 {selected.desc}
       </div>
-      <button onClick={() => setActive(a => !a)}
-        style={{
-          width: "100%", padding: "16px", borderRadius: 18,
-          background: active ? "#ffffff12" : "linear-gradient(135deg,#0ea5e9,#06b6d4)",
-          border: "none", color: "#fff", fontWeight: 700, fontSize: 17, cursor: "pointer", transition: "all 0.2s"
+
+      {/* Breathing Bubble */}
+      <div style={{
+        height: 250, display: "flex", alignItems: "center", justifyContent: "center",
+        position: "relative", marginBottom: 28
+      }}>
+        <div style={{
+          width: 170, height: 170, borderRadius: "50%",
+          background: "radial-gradient(circle, #38bdf844 0%, #0284c715 70%)",
+          border: "2px solid #38bdf888",
+          transform: `scale(${scale})`,
+          transition: "transform 1s linear",
+          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+          boxShadow: active ? "0 0 40px #38bdf833" : "none"
         }}>
-        {active ? "⏸ Pause" : "▶ Start Session"}
-      </button>
+          {active ? (
+            <>
+              <div style={{ fontSize: 15, fontWeight: 700, color: "#f8fafc" }}>{getPhaseLabel(currentPhase)}</div>
+              <div style={{ fontSize: 32, fontWeight: 800, color: "#38bdf8", marginTop: 4 }}>{phaseDur - count}</div>
+            </>
+          ) : (
+            <div style={{ color: "#94a3b8", fontSize: 13, fontWeight: 600 }}>Ready when you are</div>
+          )}
+        </div>
+      </div>
+
+      {active && (
+        <div style={{ fontSize: 12, color: "#64748b", marginBottom: 18 }}>
+          Cycles completed: {cycle}
+        </div>
+      )}
+
+      {/* Control Button */}
+      <button
+        onClick={() => {
+          if (!active) {
+            setCount(0);
+            setPhaseIndex(0);
+          }
+          setActive(!active);
+        }}
+        style={{
+          padding: "14px 38px", borderRadius: 14, border: "none",
+          background: active ? "#ef4444" : "#3b82f6",
+          color: "#fff", fontWeight: 700, fontSize: 15, cursor: "pointer",
+          boxShadow: "0 4px 14px rgba(0,0,0,0.25)"
+        }}>
+          {active ? "Pause" : "Start Breathing 🌿"}
+        </button>
     </div>
   );
 }
