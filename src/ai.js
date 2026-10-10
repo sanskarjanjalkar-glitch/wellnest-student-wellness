@@ -1,4 +1,4 @@
 import { askAI } from './ai_core.js';
-import { MOODS, BREATHS, AFFIRMATIONS, JOURNAL_PROMPTS, DAYS, loadStoredJson } from './constants.js';
+import { MOODS, STUDENT_TAGS, BREATHS, STUDENT_REMINDERS, JOURNAL_PROMPTS, DAYS, loadStoredJson } from './constants.js';
 
-export { askAI, MOODS, BREATHS, AFFIRMATIONS, JOURNAL_PROMPTS, DAYS, loadStoredJson };
+export { askAI, MOODS, STUDENT_TAGS, BREATHS, STUDENT_REMINDERS, JOURNAL_PROMPTS, DAYS, loadStoredJson };
