@@ -1,38 +1,50 @@
 import { getStudentQA } from './ai_qa.js';
+import { sanitizeInput, checkRateLimit } from './security.js';
 
-// ─── Student Companion & Support Engine ──────────────────────────────────────
+/**
+ * Student Companion & Support Query Dispatcher
+ * Secure, rate-limited, and sanitized dispatch for peer assistance.
+ */
 async function askAI(systemPrompt, userMessage, history = [], customKey = "", customProvider = "gemini") {
+  // Rate limit check: max 20 prompts per minute
+  const rateCheck = checkRateLimit('companion_chat', 20, 60000);
+  if (!rateCheck.allowed) {
+    return `Rate limit reached. Please pause and resume in ${rateCheck.retryAfterSec} seconds.`;
+  }
+
+  const cleanUserMessage = sanitizeInput(userMessage, 1000);
+  const cleanSystemPrompt = sanitizeInput(systemPrompt, 1000);
   const trimmedKey = customKey ? customKey.trim() : "";
 
-  // 1. Live Google Gemini API (if user optionally provided a key)
+  // 1. Google Gemini API integration (optional key provided in client)
   if (trimmedKey && customProvider === "gemini") {
     try {
       const contents = [
         ...history.map(h => ({
           role: h.role === "assistant" ? "model" : "user",
-          parts: [{ text: h.content }]
+          parts: [{ text: sanitizeInput(h.content, 1000) }]
         })),
-        { role: "user", parts: [{ text: userMessage }] }
+        { role: "user", parts: [{ text: cleanUserMessage }] }
       ];
 
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${trimmedKey}`, {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(trimmedKey)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          systemInstruction: { parts: [{ text: systemPrompt }] },
+          systemInstruction: { parts: [{ text: cleanSystemPrompt }] },
           contents,
           generationConfig: { maxOutputTokens: 1000, temperature: 0.7 }
         })
       });
       const data = await res.json();
       const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (reply) return reply;
+      if (reply) return sanitizeInput(reply, 2000);
     } catch {
-      // Graceful fallback
+      // Graceful fallback to deterministic local logic
     }
   }
 
-  // 2. Live Groq / OpenAI compatible API (if user optionally provided a key)
+  // 2. Groq / OpenAI compatible API integration (optional key provided in client)
   if (trimmedKey && (customProvider === "groq" || customProvider === "openai")) {
     try {
       const endpoint = customProvider === "groq" 
@@ -49,64 +61,63 @@ async function askAI(systemPrompt, userMessage, history = [], customKey = "", cu
         body: JSON.stringify({
           model,
           messages: [
-            { role: "system", content: systemPrompt },
-            ...history,
-            { role: "user", content: userMessage }
+            { role: "system", content: cleanSystemPrompt },
+            ...history.map(h => ({ role: h.role, content: sanitizeInput(h.content, 1000) })),
+            { role: "user", content: cleanUserMessage }
           ],
           max_tokens: 1000
         })
       });
       const data = await res.json();
       const reply = data.choices?.[0]?.message?.content;
-      if (reply) return reply;
+      if (reply) return sanitizeInput(reply, 2000);
     } catch {
-      // Graceful fallback
+      // Graceful fallback to deterministic local logic
     }
   }
 
-  // 3. Built-in Student Companion Brain (Zero setup, natural peer-to-peer tone)
-  await new Promise(r => setTimeout(r, 350));
-  const raw = userMessage.trim();
-  const lower = raw.toLowerCase();
+  // 3. Local Student Companion Engine (Deterministic, instant, and privacy-preserving)
+  await new Promise(r => setTimeout(r, 200));
+  const lower = cleanUserMessage.toLowerCase();
 
   // Mode A: Daily Mood Check-in Note
-  if (systemPrompt.includes("compassionate") || systemPrompt.includes("wellness coach") || systemPrompt.includes("peer")) {
+  if (cleanSystemPrompt.includes("compassionate") || cleanSystemPrompt.includes("wellness coach") || cleanSystemPrompt.includes("peer")) {
     if (lower.includes("rough") || lower.includes("struggling") || lower.includes("1/5") || lower.includes("crying") || lower.includes("fail") || lower.includes("anxious") || lower.includes("panic")) {
-      return "I'm so sorry today was rough. Academic stress and expectations can feel crushing, but remember: you are not your grades. Take tonight one hour and one breath at a time. Drink some water and get some rest. 🌿";
+      return "Experiencing a difficult day is part of demanding academic programs. Course examinations do not measure your intelligence or character. Prioritize hydration, step away from screens, and rest tonight.";
     }
     if (lower.includes("low") || lower.includes("2/5") || lower.includes("tired") || lower.includes("sleep") || lower.includes("exhaust")) {
-      return "Catching that you're running low on energy is huge. Give yourself permission to take a real pause tonight. Step away from your study desk, stretch, and let your brain reboot.";
+      return "Recognizing depleted energy early prevents deep burnout. Give yourself permission to disconnect from coursework this evening and establish a regular sleep window.";
     }
     if (lower.includes("great") || lower.includes("good") || lower.includes("5/5") || lower.includes("4/5") || lower.includes("thriving")) {
-      return "Love seeing this! Celebrate the wins—finishing assignments or having a good lecture day feels amazing. Keep riding this positive momentum! ✨";
+      return "Good work completing today's objectives. Acknowledge your steady progress across lectures and coursework, and maintain healthy study pacing.";
     }
     if (lower.includes("okay") || lower.includes("3/5")) {
-      return "An okay day is still a solid day. Steady routines get us through the semester better than sudden bursts. Be gentle with your workload today.";
+      return "A steady, average day provides consistent progress. Predictable routines sustain semester endurance more effectively than frantic cramming.";
     }
-    return "Thanks for taking 10 seconds to check in with yourself. Noticing your energy before you hit burnout makes a world of difference. You're doing better than you give yourself credit for.";
+    return "Thank you for completing your daily check-in. Tracking energy levels proactively preserves focus and reduces cumulative semester strain.";
   }
 
-  // Mode B: Weekly Rhythm Summary (Human student summary, not robot analyst)
-  if (systemPrompt.includes("analyst") || systemPrompt.includes("report") || systemPrompt.includes("summary")) {
+  // Mode B: Weekly Rhythm Summary
+  if (cleanSystemPrompt.includes("analyst") || cleanSystemPrompt.includes("report") || cleanSystemPrompt.includes("summary")) {
     if (lower.includes("low mood count: 0")) {
-      return "Your past week shows steady energy and good balance! You've stayed consistent with your check-ins. Keep protecting your sleep schedule so you don't hit sudden fatigue when midterm season arrives.";
+      return "Your logs show stable energy and balanced focus across recent days. Continue safeguarding your sleep schedule to stay resilient through upcoming deliverables.";
     }
-    return "Looking at your week, you had a few dips—usually when deadlines or exams stack up. That's totally normal, but it's a clear signal to slow down before you burn out. Try taking small 10-minute walk breaks between study sessions this week!";
+    return "Your check-ins indicate occasional fatigue corresponding with deadline peaks. This is typical during the term, but indicates a need for structured ten-minute breaks between study blocks.";
   }
 
-  // Mode C: Journal Reflection Note (Warm friend reply, not clinical breakdown)
-  if (systemPrompt.includes("journal") || systemPrompt.includes("therapist")) {
+  // Mode C: Journal Reflection Note
+  if (cleanSystemPrompt.includes("journal") || cleanSystemPrompt.includes("therapist")) {
     if (lower.includes("fail") || lower.includes("exam") || lower.includes("marks") || lower.includes("grade") || lower.includes("test")) {
-      return "Thanks for writing this down. Test anxiety can make everything feel like a make-or-break crisis, but one exam never defines your worth or your future. You're putting in honest work, and that matters more than any single score. Take a breather tonight. ☕";
+      return "Recording exam stress helps externalize anxiety. Single exam scores rarely reflect sustained ability or future potential. Reset your evening with low-stimulation rest.";
     }
     if (lower.includes("lonely") || lower.includes("alone") || lower.includes("friend") || lower.includes("nobody")) {
-      return "Campus can feel really isolating sometimes, even when surrounded by hundreds of classmates. It's okay to feel this way, but remember that many others are feeling the exact same thing. Don't be afraid to say a simple 'hi' or share notes with someone in your next class.";
+      return "Navigating large academic institutions can feel isolating at times. Many classmates experience identical feelings; consider participating in structured departmental study groups or campus clubs.";
     }
-    return "It takes real honesty to put feelings into words. Getting all that mental noise out of your head and onto the screen takes the edge off. You're handling a lot this semester, so be patient with yourself tonight.";
+    return "Articulating academic pressure in writing helps regulate cognitive overwhelm. Acknowledge the effort you have invested today and allow yourself time to recharge.";
   }
 
-  // Mode D: Direct Study Buddy Chat
-  return getStudentQA(lower, raw);
+  // Mode D: Direct Study Companion Guidance
+  return getStudentQA(lower, cleanUserMessage);
 }
 
 export { askAI };
