@@ -8,29 +8,43 @@ function HomeScreen({ moodLog, onNav, affirmIdx, onOpenSOS }) {
     : null;
 
   return (
-    <div style={{ padding: "24px 18px 90px", maxWidth: 480, margin: "0 auto" }}>
+    <div style={{ padding: "28px 18px 90px", maxWidth: 520, margin: "0 auto" }}>
       {/* Top Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
         <div>
           <div style={{
-            display: "inline-block", fontSize: 11, fontWeight: 700, color: "#38bdf8",
-            background: "#0284c722", border: "1px solid #0284c744",
-            padding: "3px 8px", borderRadius: 6, textTransform: "uppercase", letterSpacing: 1, marginBottom: 6
+            display: "inline-block",
+            fontSize: 11,
+            fontWeight: 700,
+            color: "#3b82f6",
+            background: "#1e3a8a25",
+            border: "1px solid #1d4ed844",
+            padding: "3px 8px",
+            borderRadius: 4,
+            textTransform: "uppercase",
+            letterSpacing: 1,
+            marginBottom: 6
           }}>
-            🎒 Student Wellness Project
+            Student Mental Wellness Platform
           </div>
-          <h1 style={{ fontSize: 26, fontWeight: 800, color: "#f8fafc", margin: 0, lineHeight: 1.25 }}>
-            How are you doing today?
+          <h1 style={{ fontSize: 24, fontWeight: 800, color: "#fafafa", margin: 0, lineHeight: 1.25 }}>
+            Daily Wellness Overview
           </h1>
         </div>
         <button
           onClick={onOpenSOS}
           title="Emergency Student Helpline"
           style={{
-            background: "#ef444422", border: "1px solid #ef444455", borderRadius: 10,
-            padding: "8px 12px", color: "#fca5a5", cursor: "pointer", fontSize: 12, fontWeight: 700
+            background: "#450a0a",
+            border: "1px solid #7f1d1d",
+            borderRadius: 6,
+            padding: "8px 12px",
+            color: "#fca5a5",
+            cursor: "pointer",
+            fontSize: 12,
+            fontWeight: 600
           }}>
-          🆘 Helpline
+          Crisis Helplines
         </button>
       </div>
 
@@ -41,37 +55,47 @@ function HomeScreen({ moodLog, onNav, affirmIdx, onOpenSOS }) {
         onChat={() => onNav("chat")}
       />
 
-      {/* Relatable Student Reminder Card */}
+      {/* Student Academic Reminder Card */}
       <div style={{
-        background: "#1e293b",
-        border: "1px solid #334155",
-        borderRadius: 16, padding: "16px 18px", marginBottom: 20
+        background: "#18181b",
+        border: "1px solid #27272a",
+        borderRadius: 8,
+        padding: "16px 18px",
+        marginBottom: 20
       }}>
-        <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", marginBottom: 6 }}>
-          💡 Student Reality Check
+        <div style={{ fontSize: 11, color: "#a1a1aa", fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", marginBottom: 6 }}>
+          Daily Cognitive Reframing
         </div>
-        <div style={{ fontSize: 15, color: "#e2e8f0", fontWeight: 500, lineHeight: 1.5 }}>
+        <div style={{ fontSize: 14, color: "#d4d4d8", fontWeight: 500, lineHeight: 1.5 }}>
           "{STUDENT_REMINDERS[affirmIdx % STUDENT_REMINDERS.length]}"
         </div>
       </div>
 
-      {/* Quick 10-Second Mood Check-in */}
+      {/* Quick Mood Check-in */}
       <div style={{ marginBottom: 22 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-          <div style={{ fontSize: 13, color: "#cbd5e1", fontWeight: 600 }}>Quick 10-Second Check-in</div>
-          <span style={{ fontSize: 11, color: "#64748b" }}>Tap how you feel</span>
+          <div style={{ fontSize: 13, color: "#d4d4d8", fontWeight: 600 }}>Daily Mood Rating</div>
+          <span style={{ fontSize: 11, color: "#71717a" }}>Select current state</span>
         </div>
         <div style={{ display: "flex", gap: 8, justifyContent: "space-between" }}>
           {MOODS.map(m => (
-            <button key={m.val} onClick={() => onNav("mood", m)}
+            <button
+              key={m.val}
+              onClick={() => onNav("mood", m)}
               style={{
-                flex: 1, padding: "10px 4px", borderRadius: 12, border: "1px solid #334155",
-                background: last?.val === m.val ? m.color + "25" : "#1e293b",
-                cursor: "pointer", transition: "transform 0.1s", display: "flex", flexDirection: "column",
-                alignItems: "center", gap: 4
+                flex: 1,
+                padding: "10px 4px",
+                borderRadius: 6,
+                border: last?.val === m.val ? `1px solid ${m.color}` : "1px solid #27272a",
+                background: last?.val === m.val ? "#27272a" : "#18181b",
+                cursor: "pointer",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 4
               }}>
-              <span style={{ fontSize: 22 }}>{m.emoji}</span>
-              <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>{m.label}</span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: m.color }}>{m.val}/5</span>
+              <span style={{ fontSize: 11, color: "#a1a1aa", fontWeight: 600 }}>{m.label}</span>
             </button>
           ))}
         </div>
@@ -80,47 +104,99 @@ function HomeScreen({ moodLog, onNav, affirmIdx, onOpenSOS }) {
       {/* Stats summary */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 22 }}>
         <div style={{
-          background: "#1e293b", border: "1px solid #334155", borderRadius: 14,
+          background: "#18181b",
+          border: "1px solid #27272a",
+          borderRadius: 8,
           padding: "14px 16px"
         }}>
-          <div style={{ fontSize: 18, marginBottom: 4 }}>📊</div>
-          <div style={{ fontSize: 22, fontWeight: 800, color: "#f8fafc" }}>{avg ? `${avg}/5` : "—"}</div>
-          <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>7-Day Average</div>
+          <div style={{ fontSize: 11, color: "#a1a1aa", textTransform: "uppercase", letterSpacing: 0.5, fontWeight: 600 }}>
+            7-Day Score
+          </div>
+          <div style={{ fontSize: 22, fontWeight: 800, color: "#fafafa", marginTop: 4 }}>
+            {avg ? `${avg} / 5` : "No data"}
+          </div>
+          <div style={{ fontSize: 11, color: "#71717a", marginTop: 2 }}>Rolling academic average</div>
         </div>
         <div style={{
-          background: "#1e293b", border: "1px solid #334155", borderRadius: 14,
+          background: "#18181b",
+          border: "1px solid #27272a",
+          borderRadius: 8,
           padding: "14px 16px"
         }}>
-          <div style={{ fontSize: 18, marginBottom: 4 }}>📝</div>
-          <div style={{ fontSize: 22, fontWeight: 800, color: "#f8fafc" }}>{moodLog.length}</div>
-          <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>Total Check-ins</div>
+          <div style={{ fontSize: 11, color: "#a1a1aa", textTransform: "uppercase", letterSpacing: 0.5, fontWeight: 600 }}>
+            Total Recorded
+          </div>
+          <div style={{ fontSize: 22, fontWeight: 800, color: "#fafafa", marginTop: 4 }}>
+            {moodLog.length}
+          </div>
+          <div style={{ fontSize: 11, color: "#71717a", marginTop: 2 }}>Client-side check-ins</div>
         </div>
       </div>
 
       {/* 4 Practical Student Tool Cards */}
-      <div style={{ fontSize: 13, color: "#cbd5e1", fontWeight: 600, marginBottom: 10 }}>Student Survival Tools</div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+      <div style={{ fontSize: 13, color: "#d4d4d8", fontWeight: 600, marginBottom: 10 }}>
+        Wellness and Focus Utilities
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 24 }}>
         {[
-          { label: "Study Buddy", icon: "💬", screen: "chat", desc: "Exam advice & venting", bg: "#1e293b", accent: "#38bdf8" },
-          { label: "Quick Breath", icon: "🫧", screen: "breathe", desc: "2-min panic reset", bg: "#1e293b", accent: "#34d399" },
-          { label: "Venting Space", icon: "📝", screen: "journal", desc: "Private journal", bg: "#1e293b", accent: "#f472b6" },
-          { label: "Weekly Rhythm", icon: "📈", screen: "insights", desc: "Stress pattern check", bg: "#1e293b", accent: "#fbbf24" },
+          { label: "Study Companion", screen: "chat", desc: "Exam advice and strategy", code: "01" },
+          { label: "Guided Breathing", screen: "breathe", desc: "Two-minute reset routine", code: "02" },
+          { label: "Private Venting", screen: "journal", desc: "Secure local reflections", code: "03" },
+          { label: "Weekly Patterns", screen: "insights", desc: "Energy rhythm tracking", code: "04" },
         ].map(a => (
-          <button key={a.screen} onClick={() => onNav(a.screen)}
+          <button
+            key={a.screen}
+            onClick={() => onNav(a.screen)}
             style={{
-              background: a.bg, border: "1px solid #334155", borderRadius: 14, padding: "16px 14px",
-              cursor: "pointer", textAlign: "left", color: "#fff", transition: "border-color 0.15s"
+              background: "#18181b",
+              border: "1px solid #27272a",
+              borderRadius: 8,
+              padding: "14px",
+              cursor: "pointer",
+              textAlign: "left",
+              color: "#fafafa"
             }}>
-            <div style={{ fontSize: 24, marginBottom: 6 }}>{a.icon}</div>
-            <div style={{ fontWeight: 700, fontSize: 14, color: "#f8fafc" }}>{a.label}</div>
-            <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>{a.desc}</div>
+            <div style={{ fontSize: 11, color: "#3b82f6", fontWeight: 700, marginBottom: 4 }}>
+              SECTION {a.code}
+            </div>
+            <div style={{ fontWeight: 700, fontSize: 13, color: "#fafafa" }}>{a.label}</div>
+            <div style={{ fontSize: 11, color: "#a1a1aa", marginTop: 2 }}>{a.desc}</div>
           </button>
         ))}
       </div>
 
-      {/* Subtle Privacy Badge */}
-      <div style={{ textAlign: "center", marginTop: 26, fontSize: 11, color: "#64748b" }}>
-        🔒 100% Private & Free • Stored only on your device • No sign-up needed
+      {/* Institutional Links and Legal Navigation */}
+      <div style={{
+        borderTop: "1px solid #27272a",
+        paddingTop: 16,
+        display: "flex",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        gap: 14,
+        fontSize: 11,
+        color: "#71717a"
+      }}>
+        <button
+          onClick={() => onNav("privacy")}
+          style={{ background: "none", border: "none", color: "#a1a1aa", fontSize: 11, cursor: "pointer", padding: 0 }}>
+          Privacy Policy
+        </button>
+        <span>&bull;</span>
+        <button
+          onClick={() => onNav("terms")}
+          style={{ background: "none", border: "none", color: "#a1a1aa", fontSize: 11, cursor: "pointer", padding: 0 }}>
+          Terms and Conditions
+        </button>
+        <span>&bull;</span>
+        <button
+          onClick={() => onNav("admin")}
+          style={{ background: "none", border: "none", color: "#3b82f6", fontSize: 11, cursor: "pointer", padding: 0 }}>
+          Administrator Console
+        </button>
+      </div>
+
+      <div style={{ textAlign: "center", marginTop: 12, fontSize: 11, color: "#52525b" }}>
+        Client-Side Isolated Storage | No Remote Telemetry
       </div>
     </div>
   );
