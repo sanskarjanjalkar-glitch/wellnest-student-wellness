@@ -15,9 +15,9 @@ function BreatheScreen() {
   const currentPhase = phaseOrder[phaseIndex] || "inhale";
 
   function getPhaseLabel(p) {
-    if (p === "inhale") return "Breathe In Slowly";
-    if (p === "hold1") return "Hold Gently";
-    if (p === "exhale") return "Exhale Slowly";
+    if (p === "inhale") return "Inhale Deeply";
+    if (p === "hold1") return "Hold Breath";
+    if (p === "exhale") return "Exhale Completely";
     if (p === "hold2") return "Rest";
     return "";
   }
@@ -54,58 +54,95 @@ function BreatheScreen() {
       : 1.35;
 
   return (
-    <div style={{ padding: "24px 18px 90px", maxWidth: 480, margin: "0 auto", textAlign: "center" }}>
-      <h2 style={{ color: "#f8fafc", fontWeight: 800, fontSize: 24, marginBottom: 4 }}>Guided Breathing 🫧</h2>
-      <p style={{ color: "#94a3b8", fontSize: 13, marginBottom: 20 }}>2 minutes to lower your heart rate before an exam or sleep</p>
+    <div style={{ padding: "28px 18px 90px", maxWidth: 480, margin: "0 auto", textAlign: "center" }}>
+      <div style={{ fontSize: 11, fontWeight: 700, color: "#3b82f6", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
+        Physiological Regulation
+      </div>
+      <h2 style={{ color: "#fafafa", fontWeight: 700, fontSize: 22, margin: "0 0 6px" }}>
+        Guided Breathing Protocol
+      </h2>
+      <p style={{ color: "#a1a1aa", fontSize: 13, marginBottom: 20 }}>
+        Structured pacing to moderate heart rate variability before exams or sleep.
+      </p>
 
       {/* Pattern Selector */}
-      <div style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 26 }}>
+      <div style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 20 }}>
         {BREATHS.map(b => (
-          <button key={b.name} onClick={() => { setSelected(b); setActive(false); setPhaseIndex(0); setCount(0); }}
+          <button
+            key={b.name}
+            onClick={() => { setSelected(b); setActive(false); setPhaseIndex(0); setCount(0); }}
             style={{
-              flex: 1, padding: "10px 8px", borderRadius: 12,
-              background: selected.name === b.name ? "#2563eb" : "#1e293b",
-              border: selected.name === b.name ? "1px solid #3b82f6" : "1px solid #334155",
-              color: selected.name === b.name ? "#fff" : "#94a3b8",
-              cursor: "pointer", fontSize: 12, fontWeight: 600
+              flex: 1,
+              padding: "10px 8px",
+              borderRadius: 6,
+              background: selected.name === b.name ? "#2563eb" : "#18181b",
+              border: selected.name === b.name ? "1px solid #3b82f6" : "1px solid #27272a",
+              color: selected.name === b.name ? "#ffffff" : "#a1a1aa",
+              cursor: "pointer",
+              fontSize: 12,
+              fontWeight: 600
             }}>
             {b.name}
           </button>
         ))}
       </div>
 
-      <div style={{ fontSize: 12, color: "#cbd5e1", marginBottom: 28, background: "#1e293b", padding: "8px 12px", borderRadius: 10, display: "inline-block" }}>
-        💡 {selected.desc}
+      <div style={{
+        fontSize: 12,
+        color: "#d4d4d8",
+        marginBottom: 28,
+        background: "#18181b",
+        border: "1px solid #27272a",
+        padding: "8px 14px",
+        borderRadius: 6,
+        display: "inline-block"
+      }}>
+        {selected.desc}
       </div>
 
       {/* Breathing Bubble */}
       <div style={{
-        height: 250, display: "flex", alignItems: "center", justifyContent: "center",
-        position: "relative", marginBottom: 28
+        height: 240,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative",
+        marginBottom: 24
       }}>
         <div style={{
-          width: 170, height: 170, borderRadius: "50%",
-          background: "radial-gradient(circle, #38bdf844 0%, #0284c715 70%)",
-          border: "2px solid #38bdf888",
+          width: 160,
+          height: 160,
+          borderRadius: 80,
+          background: "#18181b",
+          border: "2px solid #3b82f6",
           transform: `scale(${scale})`,
           transition: "transform 1s linear",
-          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-          boxShadow: active ? "0 0 40px #38bdf833" : "none"
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          boxShadow: active ? "0 0 24px rgba(59, 130, 246, 0.25)" : "none"
         }}>
           {active ? (
             <>
-              <div style={{ fontSize: 15, fontWeight: 700, color: "#f8fafc" }}>{getPhaseLabel(currentPhase)}</div>
-              <div style={{ fontSize: 32, fontWeight: 800, color: "#38bdf8", marginTop: 4 }}>{phaseDur - count}</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: "#fafafa" }}>
+                {getPhaseLabel(currentPhase)}
+              </div>
+              <div style={{ fontSize: 32, fontWeight: 800, color: "#3b82f6", marginTop: 4 }}>
+                {phaseDur - count}
+              </div>
             </>
           ) : (
-            <div style={{ color: "#94a3b8", fontSize: 13, fontWeight: 600 }}>Ready when you are</div>
+            <div style={{ color: "#a1a1aa", fontSize: 13, fontWeight: 600 }}>
+              Session Paused
+            </div>
           )}
         </div>
       </div>
 
       {active && (
-        <div style={{ fontSize: 12, color: "#64748b", marginBottom: 18 }}>
-          Cycles completed: {cycle}
+        <div style={{ fontSize: 12, color: "#71717a", marginBottom: 18 }}>
+          Completed Cycles: {cycle}
         </div>
       )}
 
@@ -119,13 +156,17 @@ function BreatheScreen() {
           setActive(!active);
         }}
         style={{
-          padding: "14px 38px", borderRadius: 14, border: "none",
-          background: active ? "#ef4444" : "#3b82f6",
-          color: "#fff", fontWeight: 700, fontSize: 15, cursor: "pointer",
-          boxShadow: "0 4px 14px rgba(0,0,0,0.25)"
+          padding: "12px 34px",
+          borderRadius: 6,
+          border: "none",
+          background: active ? "#dc2626" : "#2563eb",
+          color: "#ffffff",
+          fontWeight: 600,
+          fontSize: 14,
+          cursor: "pointer"
         }}>
-          {active ? "Pause" : "Start Breathing 🌿"}
-        </button>
+        {active ? "Pause Protocol" : "Begin Breathing Protocol"}
+      </button>
     </div>
   );
 }

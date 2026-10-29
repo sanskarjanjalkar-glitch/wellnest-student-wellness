@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { askAI, MOODS, JOURNAL_PROMPTS, loadStoredJson } from '../ai.js';
+import { sanitizeInput } from '../security.js';
 
 function JournalScreen() {
   const [entries, setEntries] = useState(() => {
@@ -15,8 +16,14 @@ function JournalScreen() {
   });
 
   async function saveAndReply() {
-    if (!text.trim()) return;
-    const entry = { text, mood, time: new Date().toISOString(), id: Date.now() };
+    const cleanText = sanitizeInput(text, 4000);
+    if (!cleanText) return;
+    const entry = {
+      text: cleanText,
+      mood: mood ? { label: mood.label, val: mood.val, color: mood.color } : null,
+      time: new Date().toISOString(),
+      id: Date.now()
+    };
     const newEntries = [entry, ...entries];
     setEntries(newEntries);
     localStorage.setItem("wellnest_journals", JSON.stringify(newEntries));
@@ -24,8 +31,9 @@ function JournalScreen() {
     setMood(null);
     setView("history");
     setAnalyzing(true);
+
     const res = await askAI(
-      "You are a compassionate, thoughtful student peer reading a friend's private journal entry. Write a short, warm, encouraging response (3 sentences max). Remind them they are doing their best. Do NOT use bullet points or clinical headers.",
+      "You are a compassionate, thoughtful student peer reading a classmate's private journal reflection. Provide a concise, supportive note (three sentences maximum). Remind them that consistent effort matters. Do not use bullet points or clinical headings.",
       `Journal entry: "${entry.text}"`
     );
     setFriendlyReply(res);
@@ -38,55 +46,88 @@ function JournalScreen() {
   }
 
   return (
-    <div style={{ padding: "24px 18px 90px", maxWidth: 480, margin: "0 auto" }}>
-      <h2 style={{ color: "#f8fafc", fontWeight: 800, fontSize: 24, marginBottom: 4 }}>Venting Space 📝</h2>
-      <p style={{ color: "#94a3b8", fontSize: 13, marginBottom: 18 }}>Get whatever is on your chest out of your head. 100% private.</p>
+    <div style={{ padding: "28px 18px 90px", maxWidth: 520, margin: "0 auto" }}>
+      <div style={{ fontSize: 11, fontWeight: 700, color: "#3b82f6", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
+        Cognitive Externalization
+      </div>
+      <h2 style={{ color: "#fafafa", fontWeight: 700, fontSize: 22, margin: "0 0 6px" }}>
+        Private Venting Workspace
+      </h2>
+      <p style={{ color: "#a1a1aa", fontSize: 13, marginBottom: 18 }}>
+        Externalize academic demands and stress. Encrypted and stored exclusively in browser local storage.
+      </p>
 
       {/* Tabs */}
       <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
         {["write", "history"].map(v => (
-          <button key={v} onClick={() => setView(v)}
+          <button
+            key={v}
+            onClick={() => setView(v)}
             style={{
-              padding: "7px 16px", borderRadius: 10, border: "none",
-              background: view === v ? "#3b82f6" : "#1e293b",
-              color: view === v ? "#fff" : "#94a3b8", fontWeight: 600, fontSize: 13, cursor: "pointer"
+              padding: "8px 16px",
+              borderRadius: 6,
+              border: "1px solid #27272a",
+              background: view === v ? "#2563eb" : "#18181b",
+              color: view === v ? "#ffffff" : "#a1a1aa",
+              fontWeight: 600,
+              fontSize: 12,
+              cursor: "pointer"
             }}>
-            {v === "write" ? "✍️ Write / Vent" : `📖 Past Entries (${entries.length})`}
+            {v === "write" ? "New Reflection" : `Saved History (${entries.length})`}
           </button>
         ))}
       </div>
 
       {view === "write" ? (
         <div>
-          {/* Prompt Idea Box */}
+          {/* Prompt Box */}
           <div style={{
-            background: "#1e293b", border: "1px solid #334155", borderRadius: 14,
-            padding: "14px 16px", marginBottom: 16
+            background: "#18181b",
+            border: "1px solid #27272a",
+            borderRadius: 8,
+            padding: "14px 16px",
+            marginBottom: 16
           }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: "#38bdf8", textTransform: "uppercase" }}>Thought Starter</span>
+            <div style={{ display: "flex ancient", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#3b82f6", textTransform: "uppercase", letterSpacing: 0.5 }}>
+                Structured Prompt
+              </span>
               <button
                 onClick={handleNewPrompt}
-                style={{ background: "none", border: "none", color: "#64748b", fontSize: 11, cursor: "pointer" }}>
-                🎲 Shuffle
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#a1a1aa",
+                  fontSize: 11,
+                  cursor: "pointer",
+                  fontWeight: 600
+                }}>
+                Shuffle Prompt
               </button>
             </div>
-            <div style={{ fontSize: 13.5, color: "#e2e8f0", lineHeight: 1.5 }}>
+            <div style={{ fontSize: 13, color: "#d4d4d8", lineHeight: 1.5 }}>
               "{prompt}"
             </div>
           </div>
 
           {/* Mood tag */}
           <div style={{ display: "flex", gap: 6, marginBottom: 14, alignItems: "center" }}>
-            <span style={{ fontSize: 12, color: "#94a3b8" }}>Tag feeling:</span>
+            <span style={{ fontSize: 12, color: "#a1a1aa" }}>Associated score:</span>
             {MOODS.map(m => (
-              <button key={m.val} onClick={() => setMood(m.val === mood?.val ? null : m)}
+              <button
+                key={m.val}
+                onClick={() => setMood(m.val === mood?.val ? null : m)}
                 style={{
-                  background: mood?.val === m.val ? m.color + "33" : "#1e293b",
-                  border: mood?.val === m.val ? `1px solid ${m.color}` : "1px solid #334155",
-                  borderRadius: 8, padding: "3px 7px", cursor: "pointer", fontSize: 16
+                  background: mood?.val === m.val ? "#27272a" : "#18181b",
+                  border: mood?.val === m.val ? `1px solid ${m.color}` : "1px solid #27272a",
+                  borderRadius: 4,
+                  padding: "4px 8px",
+                  cursor: "pointer",
+                  fontSize: 11,
+                  color: mood?.val === m.val ? m.color : "#a1a1aa",
+                  fontWeight: 600
                 }}>
-                {m.emoji}
+                {m.val}/5
               </button>
             ))}
           </div>
@@ -94,13 +135,21 @@ function JournalScreen() {
           <textarea
             value={text}
             onChange={e => setText(e.target.value)}
-            placeholder="Type as much or as little as you need... Nobody else can read this."
+            placeholder="Document academic pressures, schedule bottlenecks, or reflections..."
             rows={7}
             style={{
-              width: "100%", padding: "14px", borderRadius: 14,
-              background: "#1e293b", border: "1px solid #334155", color: "#f8fafc",
-              fontSize: 14, outline: "none", boxSizing: "border-box", fontFamily: "inherit",
-              lineHeight: 1.6, marginBottom: 16
+              width: "100%",
+              padding: "12px 14px",
+              borderRadius: 6,
+              background: "#18181b",
+              border: "1px solid #27272a",
+              color: "#fafafa",
+              fontSize: 13,
+              outline: "none",
+              boxSizing: "border-box",
+              fontFamily: "inherit",
+              lineHeight: 1.6,
+              marginBottom: 16
             }}
           />
 
@@ -108,53 +157,66 @@ function JournalScreen() {
             onClick={saveAndReply}
             disabled={!text.trim()}
             style={{
-              width: "100%", padding: "13px", borderRadius: 12, border: "none",
-              background: text.trim() ? "#3b82f6" : "#334155",
-              color: "#fff", fontWeight: 700, fontSize: 14,
+              width: "100%",
+              padding: "12px",
+              borderRadius: 6,
+              border: "none",
+              background: text.trim() ? "#2563eb" : "#27272a",
+              color: text.trim() ? "#ffffff" : "#71717a",
+              fontWeight: 600,
+              fontSize: 13,
               cursor: text.trim() ? "pointer" : "not-allowed"
             }}>
-            Save Entry 🌿
+            Save Entry
           </button>
         </div>
       ) : (
         /* History View */
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {analyzing && (
-            <div style={{ background: "#1e293b", padding: 14, borderRadius: 12, color: "#38bdf8", fontSize: 13, textAlign: "center" }}>
-              Writing a kind reflection for you... 🌿
+            <div style={{ background: "#18181b", padding: 12, borderRadius: 6, border: "1px solid #27272a", color: "#3b82f6", fontSize: 13, textAlign: "center" }}>
+              Generating peer reflection...
             </div>
           )}
           {friendlyReply && !analyzing && (
             <div style={{
-              background: "#1e293b", border: "1px solid #38bdf855", borderRadius: 14,
+              background: "#18181b",
+              border: "1px solid #27272a",
+              borderRadius: 8,
               padding: "16px 18px"
             }}>
-              <div style={{ fontSize: 11, color: "#38bdf8", fontWeight: 700, textTransform: "uppercase", marginBottom: 6 }}>
-                💬 Note from your Study Buddy
+              <div style={{ fontSize: 11, color: "#3b82f6", fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 6 }}>
+                Peer Note
               </div>
-              <p style={{ color: "#e2e8f0", fontSize: 13.5, lineHeight: 1.6, margin: 0 }}>
+              <p style={{ color: "#d4d4d8", fontSize: 13, lineHeight: 1.6, margin: 0 }}>
                 {friendlyReply}
               </p>
             </div>
           )}
 
           {entries.length === 0 ? (
-            <div style={{ textAlign: "center", color: "#64748b", padding: "40px 0", fontSize: 13 }}>
-              No journal entries yet. Tap "Write / Vent" above to write your first entry!
+            <div style={{ textAlign: "center", color: "#71717a", padding: "40px 0", fontSize: 13 }}>
+              No journal reflections recorded yet. Select "New Reflection" above to record an entry.
             </div>
           ) : (
             entries.map(e => (
               <div key={e.id} style={{
-                background: "#1e293b", border: "1px solid #334155", borderRadius: 14,
+                background: "#18181b",
+                border: "1px solid #27272a",
+                borderRadius: 8,
                 padding: "16px 18px"
               }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                  <span style={{ fontSize: 12, color: "#94a3b8" }}>
+                  <span style={{ fontSize: 11, color: "#a1a1aa" }}>
                     {new Date(e.time).toLocaleDateString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
                   </span>
-                  {e.mood && <span style={{ fontSize: 16 }}>{e.mood.emoji}</span>}
+                  {e.mood && (
+                    <span style={{ fontSize: 11, fontWeight: 700, color: e.mood.color }}>
+                      Score {e.mood.val}/5 ({e.mood.label})
+                    </span>
+                  )}
                 </div>
-                <div style={{ color: "#f8fafc", fontSize: 14, lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
+                <div style={{ color: "#fafafa", fontSize: 13, lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
                   {e.text}
                 </div>
               </div>
