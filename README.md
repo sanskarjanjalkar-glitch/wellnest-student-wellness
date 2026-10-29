@@ -1,80 +1,95 @@
-# 🎒 WellNest — Student Mental Health Early Detection & Peer Wellness Companion
+# WellNest: Student Mental Wellness Platform
 
-> **"Students often ignore stress, academic pressure, and sleep loss until it turns into serious burnout. WellNest is a simple, private web companion built by students to catch stress early and offer supportive peer tools."**
-
----
-
-## 🌟 Why WellNest?
-
-Most college and high school students push through exhaustion because deadlines never stop. By the time they realize something is wrong, they are already dealing with panic attacks, failing grades, or severe burnout.
-
-WellNest was built with a simple goal: **Make mental wellness as quick, friendly, and low-friction as a 10-second emoji check-in.**
+WellNest is a privacy-first web application engineered to detect early indicators of academic stress and provide structured self-regulation tools for students.
 
 ---
 
-## 🎒 Key Features (Built for Real Student Life)
+## System Overview
 
-1. **🌱 Early Stress Radar**:
-   - Detects when you log low energy or stress 2+ days in a row.
-   - Gently suggests a 2-minute breather or a quick chat with your Study Buddy *before* you hit a wall.
-
-2. **💬 Study Buddy (Peer Support)**:
-   - A friendly student companion tuned specifically for college and school challenges.
-   - Practical, honest advice on active recall, beating procrastination (5-minute rule), fixing wrecked sleep schedules, and dealing with exam anxiety.
-   - Free and works 100% out of the box with zero setup.
-
-3. **🌿 10-Second Check-ins**:
-   - 5 simple emoji feelings + 1-tap student tags (`📚 Exams / Quizzes`, `💻 Heavy Assignments`, `💤 Sleep Deprived`, `⏳ Procrastinating`).
-   - Receives an encouraging, relatable note from a peer.
-
-4. **🫧 2-Minute Guided Breathing**:
-   - Clean, calming visual circle for **Box Breathing** (pre-exam calm), **4-7-8 Calm** (bedtime racing thoughts), and **Quick Focus**.
-
-5. **📝 Venting Space (Private Journal)**:
-   - A safe place to dump frustrating thoughts, exam dread, or roommate stress.
-   - Provides a kind, supportive reflection note.
-
-6. **📈 Weekly Rhythm**:
-   - Clean 7-day visual graph of how your stress fluctuated across classes and weekends.
-   - Includes a one-click **"Load Sample Week"** button for quick testing and demonstrations.
-
-7. **🆘 Student Helplines (1-Tap SOS)**:
-   - Direct access to 988 Lifeline, Crisis Text Line (HOME to 741741), Tele-MANAS (India), and UK 111.
-
-8. **🔒 100% Anonymous & Private**:
-   - Everything stays inside your device's browser (`localStorage`).
-   - No login, no accounts, no university tracking.
+Academic environments often place sustained pressure on students, leading to cumulative burnout and acute anxiety. WellNest provides a confidential, client-side toolkit designed to monitor stress trajectories and intervene before academic fatigue compounds.
 
 ---
 
-## 🚀 Running the Project Locally
+## Core Capabilities
+
+1. **Early Stress Detection Radar**:
+   - Detects patterns when two or more consecutive check-ins record low energy levels.
+   - Prompts proactive self-regulation interventions including structured breathing and study consultation.
+
+2. **Daily Academic Check-in**:
+   - Five-point quantitative scale with context tagging (Exams, Coursework, Sleep Deficit, Procrastination).
+   - Instant client-side feedback summarizing cognitive pacing.
+
+3. **Study Companion**:
+   - Pragmatic advice tailored for university and school workloads.
+   - Structured guidance on active recall, task decomposition, sleep scheduling, and exam preparation.
+
+4. **Guided Breathing Protocol**:
+   - Visual rhythmic pacing for Box Breathing (pre-exam regulation), 4-7-8 Calm (pre-sleep relaxation), and Quick Focus.
+
+5. **Private Venting Workspace**:
+   - Encrypted local text area for externalizing acute academic frustration.
+   - Generates constructive cognitive reframing notes.
+
+6. **Seven-Day Energy Rhythm**:
+   - Longitudinal bar visualization displaying daily score distributions.
+   - Automated weekly summary synthesizing trends across study and rest periods.
+
+7. **Emergency Helplines**:
+   - Immediate access to national crisis resources (988 Lifeline, Crisis Text Line 741741, Tele-MANAS 14416, UK 111).
+
+8. **Restricted Administrator Console**:
+   - Protected by role-based access control (RBAC).
+   - Password authentication utilizing Web Crypto PBKDF2 (SHA-256) with unique cryptographic salts.
+   - Sliding-window rate limiting to mitigate credential brute forcing.
+   - System storage diagnostics and security audit event logs.
+
+---
+
+## Security Architecture
+
+- **Content Security Policy (CSP)**: Strict headers disallowing unauthorized external scripts, framing, or objects.
+- **Input Sanitization**: Multi-layer sanitization against Cross-Site Scripting (XSS) on all form submissions.
+- **Client-Side PBKDF2 Hashing**: 100,000 iterations of SHA-256 with 16-byte random salts.
+- **Rate Limiting**: Sliding window token bucket applied to administrative authentication and chat endpoints.
+- **Zero Remote Telemetry**: All mood ratings, journal entries, and chats remain strictly isolated within browser Web Storage.
+- **Production Hardening**: Source maps disabled, console debugging dropped in production builds.
+
+---
+
+## Running Locally
 
 ```bash
 # Clone the repository
 git clone https://github.com/sanskarjanjalkar-glitch/wellnest-student-wellness.git
 
-# Enter the project folder
+# Enter directory
 cd wellnest-student-wellness
 
 # Install dependencies
 npm install
 
-# Run the local development server
+# Run development server
 npm run dev
+
+# Compile hardened production build
+npm run build
 ```
 
-Then open `http://localhost:5173/` in your browser.
+---
+
+## Technology Stack
+
+- **Framework**: React 19
+- **Build Engine**: Vite 8
+- **Security**: Web Crypto API (SubtleCrypto PBKDF2 / SHA-256)
+- **Data Layer**: Client-Side Isolated Storage
+- **Design System**: Slate/Zinc Dark Palette
 
 ---
 
-## 🛠️ Tech Stack
+## Legal and Disclaimers
 
-- **React 19** + **Vite 8**
-- **Clean Responsive CSS** (Mobile-first, slate dark theme)
-- **Local-First Storage** (`localStorage`)
-- **Built-in Student Companion Intelligence** (Zero external dependencies required)
-
----
-
-## 📜 License
-MIT License. Built for students everywhere 🌿
+- See `PrivacyPolicyScreen` for full data retention and telemetry disclosures.
+- See `TermsScreen` for non-clinical educational disclaimers and emergency helpline protocols.
+- License: MIT License.
