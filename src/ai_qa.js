@@ -5,15 +5,15 @@ function getStudentQA(lower, raw) {
   // 1. WELLNEST & PROJECT SPECIFIC QUESTIONS
   // ─────────────────────────────────────────────────────────────────────────
   if (lower.includes("what is wellnest") || lower.includes("about wellnest") || lower.includes("what is this app") || lower.includes("what does this app do") || lower.includes("how does this app work")) {
-    return `WellNest is a student-built mental wellness and academic early-detection platform 🎒. 
+    return `WellNest is a student-built mental wellness and academic early-detection platform . 
 
 Here is what it does:
-• ⏱️ 10-Second Daily Check-ins: Log how your day is going with emojis and student tags (Exams, Assignments, Sleep, etc.).
-• 🌱 Early Stress Radar: If you log low mood/energy for 2+ consecutive days, it proactively alerts you before academic stress spirals into burnout.
-• 💬 Study Buddy: 24/7 instant peer support for study techniques, procrastination, exam dread, and venting.
-• 🫧 Somatic Breathwork: 2-minute guided visual exercises (Box Breathing, 4-7-8 Calm) to lower heart rate during panic.
-• 📝 Venting Space: A private, safe journal with zero judgment.
-• 🔒 100% Private: All your data stays right inside your browser's local storage. No accounts, no university tracking!`;
+• 10-Second Daily Check-ins: Log how your day is going with quantitative ratings and student context tags (Exams, Coursework, Sleep, etc.).
+• Early Stress Radar: If you log low mood/energy for 2+ consecutive days, it proactively alerts you before academic stress spirals into burnout.
+• Study Buddy: 24/7 instant peer support for study techniques, procrastination, exam dread, and venting.
+• Somatic Breathwork: 2-minute guided visual exercises (Box Breathing, 4-7-8 Calm) to lower heart rate during panic.
+• Venting Space: A private, safe journal with zero judgment.
+• 100% Private: All your data stays right inside your browser's local storage. No accounts, no university tracking!`;
   }
 
   if (lower.includes("early detection") || lower.includes("early radar") || lower.includes("stress radar") || lower.includes("how does the alert work")) {
@@ -22,11 +22,11 @@ Here is what it does:
 Most students ignore stress until midterms hit and they suddenly experience severe panic or exhaustion. 
 WellNest monitors your recent check-in patterns. If 2 or more consecutive check-ins have low scores (≤ 2/5 or 'Low'/'Rough'), an unobtrusive alert banner appears on your Home screen.
 
-It prompts you with 1-click rescue actions—either a 2-minute guided breathing session or a quick talk with your Study Buddy—giving you a chance to reset before burnout compounds.`;
+It prompts you with 1-click rescue actions - either a 2-minute guided breathing session or a quick talk with your Study Buddy - giving you a chance to reset before burnout compounds.`;
   }
 
   if (lower.includes("privacy") || lower.includes("is my data safe") || lower.includes("who can see") || lower.includes("anonymous") || lower.includes("does college track")) {
-    return `Your privacy is 100% protected on WellNest 🔒:
+    return `Your privacy is 100% protected on WellNest :
 
 • Zero Cloud Storage: All your mood logs, journal entries, and chat history are saved exclusively on your device's browser (using LocalStorage).
 • No Sign-Up: We don't ask for your name, student ID, or college email.
@@ -44,7 +44,7 @@ How it works:
 1. Set a 25-minute timer and pick ONE single task (no multitasking).
 2. Work with deep focus until the timer dings. Put your phone in another room!
 3. Take a strict 5-minute break: stand up, drink water, stretch, or look out the window (avoid social media scrolling).
-4. After completing 4 pomodoros (about 2 hours), reward yourself with a longer 20–30 minute break.
+4. After completing 4 pomodoros (about 2 hours), reward yourself with a longer 20 - 30 minute break.
 
 It prevents your brain from getting exhausted because rest is built into your rhythm!`;
   }
@@ -66,7 +66,7 @@ Here is how to do real Active Recall:
 1. Pick the concept you're learning.
 2. Pretend you have to teach it to a 10-year-old or a classmate who missed the lecture.
 3. Use plain, simple language without jargon.
-4. Whenever you get stuck or find yourself using confusing buzzwords, go back to your textbook—that's your exact knowledge gap!
+4. Whenever you get stuck or find yourself using confusing buzzwords, go back to your textbook - that's your exact knowledge gap!
 5. Simplify and create an everyday analogy. Once you can teach it simply, you own it forever.`;
   }
 
@@ -103,8 +103,8 @@ Here is how to do real Active Recall:
   if (lower.includes("cramming") || lower.includes("night before") || lower.includes("exam tomorrow") || lower.includes("last minute") || lower.includes("havent studied")) {
     return `If your exam is tomorrow and you're panicking, let's do Emergency Triage:
 
-1. Stop trying to cover 100% of the syllabus: Aim for the high-yield 60–70% (previous years' recurring questions, professor's stressed topics).
-2. Look at Past Year Papers (PYQs): In college exams, 70% of exam questions follow patterns from the last 3–5 years' papers.
+1. Stop trying to cover 100% of the syllabus: Aim for the high-yield 60 - 70% (previous years' recurring questions, professor's stressed topics).
+2. Look at Past Year Papers (PYQs): In college exams, 70% of exam questions follow patterns from the last 3 - 5 years' papers.
 3. Don't pull a zero-sleep all-nighter: Sleeping at least 3.5 to 4.5 hours gives your hippocampus time to lock in what you reviewed. Without sleep, you'll blank out on the exam paper even on stuff you memorized.
 4. Quick summary tables > reading full paragraphs.`;
   }
@@ -124,7 +124,7 @@ What specific subject are you tackling right now? Let's break it down!`;
   // 3. TIME MANAGEMENT, OVERWHELM & PROCRASTINATION
   // ─────────────────────────────────────────────────────────────────────────
   if (lower.includes("procrastinat") || lower.includes("can't focus") || lower.includes("cant focus") || lower.includes("wasting time") || lower.includes("distract") || lower.includes("lazy") || lower.includes("put off")) {
-    return `Procrastination is NOT laziness—it's your brain feeling overwhelmed by a task that seems too big or intimidating.
+    return `Procrastination is NOT laziness - it's your brain feeling overwhelmed by a task that seems too big or intimidating.
 
 How to beat it right now:
 1. The 5-Minute Rule: Tell yourself you only have to work on it for 300 seconds. Open the document, format the header, write one paragraph. After 5 minutes, you have full permission to stop. 90% of the time, getting started is the only hard part!
@@ -136,7 +136,7 @@ How to beat it right now:
   if (lower.includes("time management") || lower.includes("manage time") || lower.includes("routine") || lower.includes("timetable") || lower.includes("schedule") || lower.includes("balance life")) {
     return `Realistic student time management (that doesn't require a military schedule):
 
-1. Time-Blocking: Instead of a vague to-do list, assign specific calendar blocks (e.g. '2:00 PM – 3:30 PM: Lab Report'). Tasks expand to fill open time unless bounded.
+1. Time-Blocking: Instead of a vague to-do list, assign specific calendar blocks (e.g. '2:00 PM  -  3:30 PM: Lab Report'). Tasks expand to fill open time unless bounded.
 2. The Rule of 3: Every morning, write down only 3 critical things that MUST get done today. Everything else is a bonus.
 3. Build in Buffer Time: Classes run late, group members lag, and tiredness happens. Leave 1 hour of unassigned buffer daily so your schedule doesn't collapse when delays occur.
 4. Protect Your Shutdown Hour: Pick a time each night (e.g. 10:00 PM) where schoolwork officially stops. Having an end time forces you to be more productive during the day!`;
@@ -147,7 +147,7 @@ How to beat it right now:
 
 1. Brain Dump on Paper: Write every single pending deadline, project, and quiz on a physical paper. Getting it out of your head immediately reduces mental anxiety.
 2. Triage with the 4-Quadrant Priority:
-   • Due in 24–48 hours & heavy grade weight -> DO FIRST.
+   • Due in 24 - 48 hours & heavy grade weight -> DO FIRST.
    • Low grade weight or due next week -> POSTPONE.
    • Quick 10-minute tasks (submitting a form, emailing a professor) -> DO NOW to clear mental space.
 3. Pick Just ONE Item: Close all other browser tabs. Work on that single assignment for 45 minutes without looking at the rest.
@@ -212,7 +212,7 @@ Here is how to counter it:
 
 • You are comparing your messy internal behind-the-scenes with everyone else's polished highlight reel.
 • People in lectures nod their heads like they understand everything when half of them are just as confused as you are.
-• You didn't get accepted into college or school by mistake—admissions and grading committees don't make clerical errors like that.
+• You didn't get accepted into college or school by mistake - admissions and grading committees don't make clerical errors like that.
 • Feeling challenged means you are learning at the boundary of your comfort zone, which is where real intellectual growth happens!`;
   }
 
@@ -223,7 +223,7 @@ Here is how to counter it:
     return `Pulling all-nighters actually decreases test performance by up to 40% because your brain consolidates memories during REM sleep.
 
 Here's how to fix your sleep routine:
-1. The 10-Hour Caffeine Cutoff: Stop coffee, energy drinks, and tea at least 8–10 hours before your intended bedtime.
+1. The 10-Hour Caffeine Cutoff: Stop coffee, energy drinks, and tea at least 8 - 10 hours before your intended bedtime.
 2. Dim Screens & Night Shift: Blue light tricks your pineal gland into thinking it's noon. Turn on Night Shift or f.lux.
 3. Bedtime Brain Dump: Keep a small notepad beside your pillow. Write down tomorrow's to-do list so your brain stops spinning in circles.
 4. Try the 4-7-8 Breathing: Head over to WellNest's Breathe tab and run 3 rounds of the 4-7-8 exercise in bed. It signals your autonomic nervous system to shut down adrenaline.`;
@@ -277,9 +277,9 @@ Immediate triage:
   // 7. EMOTIONAL VENTING (SAD, ANGRY, CRYING, QUIT)
   // ─────────────────────────────────────────────────────────────────────────
   if (lower.includes("crying") || lower.includes("cried") || lower.includes("sad") || lower.includes("feel sad") || lower.includes("depressed") || lower.includes("unhappy")) {
-    return `I'm really sorry things are feeling so heavy right now. 💜 
+    return `I'm really sorry things are feeling so heavy right now.  
 
-Please don't hold back the tears—crying is your nervous system's biological way of releasing trapped cortisol and stress chemicals.
+Please don't hold back the tears - crying is your nervous system's biological way of releasing trapped cortisol and stress chemicals.
 You're carrying a huge load of coursework, expectations, and personal challenges, and it's completely normal to feel depleted.
 
 Take a break from your books. Wrap yourself in a blanket, drink a warm cup of water or tea, and know that you are not alone in this. Tomorrow is a clean slate.`;
@@ -300,11 +300,11 @@ Take a break from your books. Wrap yourself in a blanket, drink a warm cup of wa
     return `Please pause and listen to me: You matter deeply, and you do not have to carry this immense pain by yourself.
 
 There are people who genuinely care and want to support you right now, completely free and confidentially:
-• 📞 Call or Text 988 (Suicide & Crisis Lifeline - 24/7, Free)
-• 💬 Text HOME to 741741 (Crisis Text Line)
-• 🇮🇳 India: Call 14416 (Tele-MANAS)
-• 🇬🇧 UK: Call 111
-• Tap the 🆘 Helpline button at the top right of WellNest.
+• Call or Text 988 (Suicide & Crisis Lifeline - 24/7, Free)
+• Text HOME to 741741 (Crisis Text Line)
+• India: Call 14416 (Tele-MANAS)
+• UK: Call 111
+• Select the Crisis Helplines button at the top of WellNest.
 
 Please reach out to one of these resources, a close friend, or campus counselor right now. Your life is irreplaceable.`;
   }
@@ -320,7 +320,7 @@ Please reach out to one of these resources, a close friend, or campus counselor 
     return `Here is a practical, step-by-step breakdown on **${cleanTopic}**:
 
 1. Clarify the First Micro-Step: Big goals cause paralysis. Break this down into an action that takes under 5 minutes so you can start with zero friction.
-2. Eliminate Common Traps: Watch out for distractions or perfectionism—doing it imperfectly today beats waiting for the 'ideal time'.
+2. Eliminate Common Traps: Watch out for distractions or perfectionism - doing it imperfectly today beats waiting for the 'ideal time'.
 3. Protect Your Energy: Set a clear boundary on how much time you invest so it doesn't drain your focus from your other priorities.
 
 What specific hurdle is making this tough for you right now? Let's figure it out together!`;
@@ -349,14 +349,14 @@ Tell me a bit more about what's happening so I can give you more specific advice
   }
 
   // General conversational response (Adaptive, not boilerplate!)
-  return `I hear you regarding **"${cleanTopic}"**. Student life throws a lot of curveballs—whether it's navigating difficult course material, time crunches, or mental fatigue.
+  return `I hear you regarding **"${cleanTopic}"**. Student life throws a lot of curveballs - whether it's navigating difficult course material, time crunches, or mental fatigue.
 
 Here is my advice:
 • Focus on what is directly within your control today.
 • Let go of the need for everything to go perfectly.
 • Take 2 minutes to stretch, hydrate, and breathe before diving into your next task.
 
-What aspect of this would you like to unpack or solve first? 🌿`;
+What aspect of this would you like to unpack or solve first? `;
 }
 
 export { getStudentQA };
